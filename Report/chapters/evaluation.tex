@@ -2,4 +2,35 @@
 \label{sec:evaluation}
 
 \section{Time-of-Flight Ranging Sensor}
-For this thesis we've decided on using the VL53L0X ToF Ranging Sensor developed by STMicroelectronics for the distance measurements. The sensor has a range of 0\unit{mm} up to 2\unit{m} under optimal conditions, i.e. no infrared radiation. The sensor allows four different profile to be used:\\
+For this thesis we've decided on using the VL53L0X ToF Ranging Sensor developed by STMicroelectronics for the distance measurements. The sensor has a range of \unit[0]{mm} up to \unit[2]{m} under optimal conditions, i.e. no infrared radiation. The sensor allows four different profile to be used (Tab: \ref{tab:profile}). To facilitate the integration we use a satellite board.
+
+\begin{table}[]
+	\centering
+	\caption{Range profile}
+	\label{tab:profile}
+	\resizebox{\textwidth}{!}{%
+		\begin{tabular}{|c|c|c|c|}
+			\hline
+			\textbf{Range Profile} & \textbf{Range Timing Budget} & \textbf{Typical Performance} & \textbf{Typical Application}                                                             \\ 
+			\specialrule{.2em}{.1em}{.1em} 
+			Default Mode           & 30 ms                        & 1.2 m                        & Standard                                                                                 \\ \hline
+			High Accuracy          & 200 ms                       & 1.2 m                        & Precise Measurement                                                                      \\ \hline
+			Long Range             & 33 ms                        & 2 m                          & \begin{tabular}[c]{@{}c@{}}Long Rangin,\\  only for dark conditions (no IR)\end{tabular} \\ \hline
+			High Speed             & 20 ms                        & 1.2 m                        & \begin{tabular}[c]{@{}c@{}}High Speed, \\ where accuracy is not important\end{tabular}   \\ \hline
+		\end{tabular}%
+	}
+\end{table}
+
+
+\subsection{Evaluation}
+We evaluated the sensor's performance using different target surfaces and under different lightning conditions. During the measurements we changed the angles and distance relative to the target. For the ground truth measurement we used a yardstick and a protractor. \\
+The surfaces used for the evaluation were a white plastered wall, a concrete wall and a wooden wall. The results of the measurements using different surface did not show a significant difference between the surfaces. \\ 
+Increasing the angle sharpness or the distance of the sensor relative to the wall slightly decreased the accuracy. \\
+A major factor of influence is IR. Outside, the sunlight not only decreases the accuracy, increases the variation and corrupts several measurements. With direct sunlight, up to 80\% of the measurements are corrupted. The raw data points should then be filtered to get accurate 
+
+
+
+
+
+
+
