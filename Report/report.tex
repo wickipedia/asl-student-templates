@@ -1,5 +1,4 @@
 %==============================================================================
-% ETHASL - Template for student projects at the ASL
 % 2013.10: Péter Fankhauser
 % This template is based on the IMRT Latex template by Eric A. Mueller.
 %==============================================================================
@@ -8,7 +7,7 @@
 
 \usepackage{pdfpages}
 
-\usepackage[bt,fs,english]{packages/ethasl}
+\usepackage[bt,fs,english]{./packages/ethasl}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % LaTeX preamble
@@ -42,10 +41,8 @@
 % Declaration of originality
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \pagestyle{empty}
-% TODO Modify placeholders in declaration.tex
-%\input{chapters/declaration}
-\includepdf[pagecommand={}]{chapters/declaration-originality.pdf}
-
+\input{chapters/declaration}
+%\includepdf[pagecommand={}]{chapters/declaration-originality.pdf}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Table on contents
@@ -73,10 +70,9 @@
 \pagestyle{fancy}
 \pagenumbering{arabic}
 
-% TODO Add your own chapters here
 \input{chapters/introduction}
 \cleardoublepage
-\input{Report/chapters/Evaluation.tex}
+\input{chapters/evaluation.tex}
 \cleardoublepage
 \input{chapters/chapter}
 \cleardoublepage
