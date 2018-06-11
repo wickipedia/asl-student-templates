@@ -1,28 +1,12 @@
 % !TeX spellcheck = en_GB
 \chapter{Methods}
-\label{ch:methods}
-First, we evaluated the \textit{VL53L0X ToF Ranging Sensor} with a \textit{mbed LPC1768} microcontroller on its potential use for obstacle avoidance on a MAV (\cref{sec:tof}). Second, we integrated the sensors on the pixhawk autopilot (\cref{sec:pixhawk}). Last, we implemented a potential field in the pixhawk (\cref{sec:potential field}). 
-
+\label{ch:methodsff}
+First, we evaluated the \textit{VL53L0X ToF Ranging Sensor} with a \textit{mbed LPC1768} microcontroller on its potential use for obstacle avoidance on a MAV (\cref{sec:tof}). Second, we integrated the sensors on the pixhawk autopilot (\cref{sec:pixhawk}). Last, we implemented a potential field in the pixhawk.
 \section{Time-of-Flight Ranging Sensor}
 \label{sec:tof}
 For this thesis we've decided on using the \textit{VL53L0X ToF Ranging Sensor} developed by \textit{STMicroelectronics} for the distance measurements. For the evaluation we connected the sensor via I2C to a \textit{mbed LPC1768} microcontroller. The sensor has a range of \unit[0]{mm} up to \unit[2]{m} under optimal conditions, i.e. no infrared radiation. The sensor allows four different modes to be used (\cref{tab:profile}). To facilitate the integration we use a satellite board. The VL53L0X sensor comes with a Application Programming Interface (API) which allows to control of the VL53L0X Firmware like initialisation/calibration, ranging Start/Stop, choice of accuracy and choice of ranging mode.
 
-\begin{table}[]
-	\centering
-	\caption{Range profile}
-	\label{tab:profile}
-	\resizebox{\textwidth}{!}{%
-		\begin{tabular}{|c|c|c|c|}
-			\hline
-			\textbf{Range Profile} & \textbf{Range Timing Budget} & \textbf{Typical Performance} & \textbf{Typical Application}                                                             \\ 
-			\specialrule{.2em}{.1em}{.1em} 
-			Default Mode           & 30 ms                        & 1.2 m                        & Standard                                                                                 \\ \hline
-			High Accuracy          & 200 ms                       & 1.2 m                        & Precise Measurement                                                                      \\ \hline
-			Long Range             & 33 ms                        & 2 m                          & \begin{tabular}[c]{@{}c@{}}Long Rangin,\\  only for dark conditions (no IR)\end{tabular} \\ \hline
-			High Speed             & 20 ms                        & 1.2 m                        & \begin{tabular}[c]{@{}c@{}}High Speed, \\ where accuracy is not important\end{tabular}   \\ \hline
-		\end{tabular}%
-	}
-\end{table}
+
 
 
 \subsection{Evaluation}
@@ -82,9 +66,9 @@ Increasing the angle sharpness or the distance of the sensor relative to the wal
 	\end{minipage}
 \end{figure}
 
-A major factor of influence is IR. Outside, the slight not only decreases the accuracy, and increases the variance but moreover corrupts several measurements. With direct sunlight, up to 80\% of the measurements are corrupted (\cref{fig:meas_out}). To get reliable data, first, we filtered out the corrupted data point and, second, filtered the data with the help of the Mahalonobis distance and a Kalman filter. Filtering out the corrupted data is unproblematic, since the corrupted data point always have a value greater than 8000. For the filter, we assumed constant distance in the process model. 
+A major factor of influence is IR. Outside, the sunlight not only decreases the accuracy, and increases the variance but moreover corrupts several measurements. With direct sunlight, up to 80\% of the measurements are corrupted (\cref{fig:meas_out}). To get reliable data, first, we filtered out the corrupted data point and, second, filtered the data with the help of the Mahalonobis distance and a Kalman filter. Filtering out the corrupted data is unproblematic, since the corrupted data point always have a value greater than 8000. For the filter, we assumed constant distance in the process model. 
 \begin{equation}
-	\label{eq:filter}
+	\label{eq:filter2}
 	\begin{split} 
 	x_k & = x_{k-1} \\
 	y_k & = x_k + v_k
@@ -94,7 +78,7 @@ The noise process $v_k$ is white, zero-mean, uncorrelated, and has known covaria
 The assumption of constant distance is only valid for the evaluation of the sensor. In case of a moving sensor or target a dynamic process model has to be developed. Further, a IMU should be used for the a priori state estimate. The VL53L0X sensor fused with a IMU has a faster update rate and performs more accurate. \\
 
 \begin{algorithm}
-	\caption{Filter}\label{alg:filter}
+	\caption{Filter}\label{alg:filter2}
 	\begin{algorithmic}[1]
 		\Procedure{FILTER}{ }
 		\State $y_{data}\gets \text{raw data points}$ 
@@ -141,15 +125,4 @@ By applying our filter  (\cref{alg:filter}) to the raw data points we get a conv
 \subsection{Conclusion}
 Without any IR source, e.g. inside, the \textit{VL53L0X ToF Ranging Sensor} operates accurate and without corrupting any data points. The variance is a few percentage and does not change significantly with increasing distance or angle relative to the target. Due to the sensor's lightweight and it's low power consumption the sensor can be adapted for the usage on a MAV, e.g. for avoidance. \\
 Used with a IR source data points might get corrupted depending on the strength of the source, thus the usage of the sensor is limited. With the help of a filter, like the one presented (\cref{alg:filter}), the sensor's performance in terms of accuracy can be improved. This allows a reliable usage of the sensor. A IMU might be used for the a priori state estimate, though. \\
-
-
-\section{Pixhawk}
-\label{sec:pixhawk}
-We use a \textit{pixhawk mRo} as a autopilot. \\
-First we tried to connect four different VL53L0X sensor's to the pixhawk via I2C. Due to flash overflow due to the size of the sensor's API this wasn't possible. The calibration of the sensor requires too much computational resources.
-
-
-
-\section{Potential Field}
-\label{sec:potential field}
 
