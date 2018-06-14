@@ -1,6 +1,7 @@
 \chapter{Results}
 In the following the evaluation results of the VL53L0X sensor and of the whole avoidance system are presented. 
 \section{VL53L0X}
+\label{sec:vl53l0x}
 By evaluating the VL53L0X sensor we wanted to prove its ability for autonomous avoidance. 
 First, we analysed the sensors on its ability to accurately measures the distance to different surfaces indoors (\crefrange{fig:surface_hist_con}{fig:surface_hist_white}). We conducted 100 measurements per surface at a distance of \unit[200]{mm}. The result show no significant difference between the surfaces. Next, we varied the angles of the sensor relative to the wall at a constant distance of \unit[200]{mm} indoors (\crefrange{fig:angle90}{fig:angle22.5}). Increasing the angle sharpness or the distance of the sensor relative to the wall does not significantly affect the accuracy of the sensor. Last, we varied the distance from the VL53L0X to a target indoors (\crefrange{fig:dist200}{fig:dist1000}). From the results a increase of the standard error can be observed.\\
 
@@ -127,7 +128,7 @@ As a next step, we manoeuvred the platfrom towards a wall with a remote control 
 \begin{figure}
 	\centering
 	\includegraphics[width=0.9\linewidth]{pictures/plot_pf_test.pdf}
-	\caption{The distance between platform and wall, corrective pitch angle computed by the potential field, pitch of the platform and pitch setpoint of the remote control are plotted. Two approaches of the platform towards the wall can be observed. The first one is rather slow which results in a gentle push-back from the wall. The second approach is more aggressive followed by a fast change of the corrective pitch which destabilizes the MAV. Consequently, the pilot has to manually counter steer the corrective pitch.}
+	\caption{The distance between platform and wall, corrective pitch angle computed by the potential field, pitch of the platform and pitch setpoint of the remote control are plotted. The VL53L0X ranging sensors have a maximum range of \unit[1200]{mm} thus the distance measurement less and equal to \unit[1200]{mm} are valid. Two approaches of the platform towards the wall can be observed. The first one is rather slow which results in a gentle repulsive force. The second approach is more aggressive followed by a fast change of the corrective pitch. This leads to a fast change of pitch what destabilizes the platform.    Consequently, the pilot has to manually counter steer the corrective pitch.}
 	\label{fig:pf test}
 \end{figure}
 
