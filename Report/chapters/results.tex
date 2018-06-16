@@ -2,10 +2,7 @@
 In the following the evaluation results of the VL53L0X sensor and of the whole avoidance system are presented. 
 \section{VL53L0X}
 \label{sec:vl53l0x}
-By evaluating the VL53L0X sensor we wanted to prove its ability for autonomous avoidance. 
-First, we analysed the sensors on its ability to accurately measures the distance to different surfaces indoors (\crefrange{fig:surface_hist_con}{fig:surface_hist_white}). We conducted 100 measurements per surface at a distance of \unit[200]{mm}. The result show no significant difference between the surfaces. Next, we varied the angles of the sensor relative to the wall at a constant distance of \unit[200]{mm} indoors (\crefrange{fig:angle90}{fig:angle22.5}). Increasing the angle sharpness or the distance of the sensor relative to the wall does not significantly affect the accuracy of the sensor. Last, we varied the distance from the VL53L0X to a target indoors (\crefrange{fig:dist200}{fig:dist1000}). From the results a increase of the standard error can be observed.\\
-
-
+By evaluating the VL53L0X sensor we wanted to prove its ability for autonomous avoidance. First, we analysed the sensors on its ability to accurately measures the distance to different surfaces without a IR source (\crefrange{fig:surface_hist_con}{fig:surface_hist_white}). We conducted 100 measurements per surface at a distance of \unit[200]{mm}. We compared a white plastered, a concrete and a wooden wall. No significant difference between the surfaces can be observed. All data show a Gaussian distribution. The deviation from the ground truth distance can be explained with measurement errors of ground truth distance. Next, we varied the angles of the sensor relative to the wall at a constant distance of \unit[200]{mm}. (\crefrange{fig:angle90}{fig:angle22.5}). The angles measured are \unit[90]{°}, \unit[45]{°} and \unit[22.5]{°}, where \unit[90]{°} corresponds to the laser beam of the sensor hitting the target perpendicular. Increasing the angle sharpness relative to the wall does not significantly influence the measurements. Last, we varied the distance from the VL53L0X sensor to a target (\crefrange{fig:dist200}{fig:dist1000}). The experiments were conducted inside at a distance of \unit[200]{mm}, \unit[500]{mm} and \unit[1000]{mm}. The standard error stays at around \unit[0.7]{\%} of the distance.\\
 \begin{figure}
 		\centering
 		\includegraphics[width=0.9\linewidth]{pictures/concrete_hist.pdf}
@@ -72,28 +69,28 @@ The previous testing were all conducted inside, i.e, without a IR source. In the
 \begin{figure}
 	\centering
 	\includegraphics[width=0.9\linewidth]{pictures/plot_out_shadow.pdf}
-	\caption{Measurement outside without direct sunlight. All measurements above 8000 failed due disturbance of the IR in the sunlight. Only 82 out of 100 measurements can be used for further processing. The ground truth distance $d_{truth}=\unit[200]{mm}$, the expected value is $E=\unit[189.95]{mm}$ and the standard error is $\sigma=\unit[27.51]{mm}$ without considering the failed data points.}
+	\caption{Measurement outside without direct sunlight. On the x axis is the measurement count and on the y-axis the distance from the sensor to the target. All measurements above 8000 failed due disturbance of the IR in the sunlight. Only 82 out of 100 measurements can be used for further processing. The ground truth distance $d_{truth}=\unit[200]{mm}$, the expected value is $E=\unit[189.95]{mm}$ and the standard error is $\sigma=\unit[27.51]{mm}$ without considering the failed data points.}
 	\label{fig:meas_out_shadow}
 \end{figure}
 
 \begin{figure}
 	\centering
-	\includegraphics[width=0.9\linewidth]{pictures/plot_out_sun.pdf}
-	\caption{Measurement outside with direct sunlight. All measurements above 8000 are corrupted due to the IR of the sunlight. Only 18 out of 100 measurements can be used for further processing. The ground truth distance $d_{truth}=\unit[500]{mm}$, the expected value is $E=\unit[434.54]{mm}$ and the standard error is $\sigma=\unit[98.22]{mm}$ without considering the failed data points.}
+	\includegraphics[width=0.9\linewidth]{pictures/plot_meas_out.pdf}
+	\caption{Measurement outside with direct sunlight. On the x axis is the measurement count and on the y-axis the distance from the sensor to the target. All measurements above 8000 are corrupted due to the IR of the sunlight. Only 18 out of 100 measurements can be used for further processing. The ground truth distance $d_{truth}=\unit[500]{mm}$, the expected value is $E=\unit[434.54]{mm}$ and the standard error is $\sigma=\unit[98.22]{mm}$ without considering the failed data points.}
 	\label{fig:meas_out_sun}
 \end{figure}
 
 \begin{figure}
 	\centering
 	\includegraphics[width=0.9\linewidth]{pictures/plot_filter_shadow.pdf}
-	\caption{Comparison of raw data and filtered data (\cref{alg:filter}). Measurement are conducted outside without direct sunlight. The last value of the filtered data is \unit[201.28]{mm} and the ground truth distance is $d_{truth}=\unit[200]{mm}$. A convergence of the filtered data towards the ground truth distance can be observed}
+	\caption{Comparison of raw data and filtered data (\cref{alg:filter}). On the x axis is the measurement count and on the y-axis the distance from the sensor to the target. Measurement are conducted outside without direct sunlight. The last value of the filtered data is \unit[201.28]{mm} and the ground truth distance is $d_{truth}=\unit[200]{mm}$. A convergence of the filtered data towards the ground truth distance can be observed}
 	\label{fig:meas_out_shadow filter}
 \end{figure}
 
 \begin{figure}
 	\centering
 	\includegraphics[width=0.9\linewidth]{pictures/plot_filter_sun.pdf}
-	\caption{Comparison of raw data and filtered data (\cref{alg:filter}). Measurement are conducted outside with direct sunlight. The last value of the filtered data is \unit[510.53]{mm} and the ground truth distance is $d_{truth}=\unit[500]{mm}$. A convergence of the filtered data towards the ground truth distance can be observed}
+	\caption{Comparison of raw data and filtered data (\cref{alg:filter}). On the x axis is the measurement count and on the y-axis the distance from the sensor to the target. Measurement are conducted outside with direct sunlight. The last value of the filtered data is \unit[510.53]{mm} and the ground truth distance is $d_{truth}=\unit[500]{mm}$. A convergence of the filtered data towards the ground truth distance can be observed}
 	\label{fig:meas_out_sun filter}
 \end{figure}
 

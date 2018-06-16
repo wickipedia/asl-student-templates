@@ -1,13 +1,13 @@
 \chapter{Methods}
 \label{ch:methods}
-We have decided on the following approach for the autonomous avoidance system. We use four different ToF ranging sensors each mounted on one side and pointing in either negative or positive x-direction, or in either negative or positive y-direction (\cref{fig:sketch}). The sensors send the data to the \textit{mbed LPC1768} microcontroller from which the ranging data is send forward to the \textit{pixhawk} autopilot. With a  potential field computed the pixhawk the repulsive force from the ranging data. The force is converted into corrective attitude angles and send to the low-level attitude controller (\cref{fig:approach}). Eventually, the drone should repulse itself away from the obstacle.\\
+We have decided on the following approach for the autonomous avoidance system. We use four different ToF ranging sensors each mounted on one side and pointing in either negative or positive x-direction, or in either negative or positive y-direction (\cref{fig:sketch}). The sensors send the data to the \textit{mbed LPC1768} microcontroller from which the ranging data is send forward to the \textit{pixhawk} autopilot. The pixhawk  uses the ranging data to compute the repulsive force from the obstacle. The repulsive force is derived from an artificial potential field which exponentially increases towards an obstacle. The force is converted into corrective attitude angles and send to the low-level attitude controller, where the corrective angles are added to the attitude set-point. The controller then computes the required thrust for each motor (\cref{fig:approach}). Eventually, the drone should repel itself from the obstacle.\\
 
-The overall methodology of the thesis can be split into the following steps:
+For a successful implementation of a potential field we have decided on the following methodology:
 \begin{enumerate}
 	\item Evaluation of the \textit{VL53L0X} ToF Ranging Sensor with a \textit{mbed LPC1768} microcontroller on its potential use for obstacle avoidance on a MAV (\cref{sec:ranging sensor})
-	\item Integration of four \textit{VL53L0X} sensors on the pixhawk autopilot (\cref{sec:pixhawk}).
-	\item Implementation of a potential field on the \textit{pixhawk} (\cref{sec:potential field}).
-	\item Testing of the whole system.  (\cref{sec:testing})
+	\item Integration of four \textit{VL53L0X} sensors in the pixhawk autopilot (\cref{sec:pixhawk}).
+	\item Implementation of a potential field on the pixhawk (\cref{sec:potential field}).
+	\item Testing the whole system.  (\cref{sec:testing})
 \end{enumerate}
 
 \begin{figure}
@@ -26,7 +26,7 @@ The overall methodology of the thesis can be split into the following steps:
 
 \section{Ranging Sensor}
 \label{sec:ranging sensor}
-A major constraint for MAVs is the payload and the available power, thus, we needed a low power and on the same time lightweight ranging sensor. We've opted for the \textit{VL53L0X} ToF Ranging Sensor developed by \textit{STMicroelectronics} (\cref{fig:sensor}) for the distance measurements. For the evaluation we connected the sensor via I2C bus to a \textit{mbed LPC1768} microcontroller. The sensor has a range of \unit[0]{mm} up to \unit[2]{m} under optimal conditions, i.e., no infrared radiation (IR). With a IR source the sensor has a range of \unit[0]{m} to \unit[1.2]{m}.  The sensor allows four different modes to be used (\cref{tab:profile}). To facilitate the integration we use the \textit{53L0-SATEL-I1} satellite board (\cref{fig:satellite}). As defined by the manufacturer, the satellite board can be used with a power supply ranging from \unit[2.8]{V} up to \unit[5]{V}. The PCB section supporting the VL53L0X module is perforated so that developers can break off the mini PCB for use in a 2.8V supply application. The PCB can be utilized for further minituarisation. The \textit{VL53L0X} sensor comes with a Application Programming Interface (API) which allows to control of the VL53L0X Firmware like initialisation/calibration, ranging Start/Stop, choice of accuracy and choice of ranging mode. If the sensor is not able to make a measurement or the target is outside of its range, the API returns a value greater than 8000 \cite{VL53L0X}.\\
+A major constraint for MAVs is the payload and the available power, thus, we need a low power and on the same time lightweight ranging sensor for our avoidance system. We've opted for the \textit{VL53L0X} ToF Ranging Sensor developed by \textit{STMicroelectronics} (\cref{fig:sensor}) for the distance measurements. For the evaluation we connected the sensor via I2C bus to a \textit{mbed LPC1768} microcontroller. The sensor has a range of \unit[0]{mm} up to \unit[2]{m} at optimal conditions, i.e., no infrared radiation (IR). With a IR source the sensor has a range of \unit[0]{m} to \unit[1.2]{m}.  The sensor allows four different modes to be used (\cref{tab:profile}). To facilitate the integration we use the \textit{53L0-SATEL-I1} satellite board (\cref{fig:satellite}). As defined by the manufacturer, the satellite board can be used with a power supply ranging from \unit[2.8]{V} up to \unit[5]{V}. The PCB section supporting the VL53L0X module is perforated so that developers can break off the mini PCB for use in a 2.8V supply application. The PCB can be utilized for further miniaturisation. The \textit{VL53L0X} sensor comes with a Application Programming Interface (API) which allows to control the VL53L0X firmware like initialisation/calibration, ranging Start/Stop, choice of accuracy and choice of ranging mode. If the sensor is not able to make a measurement or the target is outside of its range, the API returns a value greater than 8000 \cite{VL53L0X}.\\
 \begin{figure}
 	\centering
 	\includegraphics[width=.3\linewidth]{pictures/concrete_wall.jpg}\quad
@@ -66,7 +66,7 @@ A major constraint for MAVs is the payload and the available power, thus, we nee
 	}
 \end{table}
 We evaluated the sensor's performance using different target surfaces and under different lightning conditions. During the measurements we varied the angles and distance relative to the target. For the ground truth measurement we used a yardstick and a protractor. We conducted 100 measurements for every measurement setup. The surfaces used for the evaluation were a white plastered wall, a concrete wall and a wooden wall (\cref{fig:surfaces}).\\
-The sensor uses IR for the measurement. Another strong IR source in the proximity of the sensor, e.g., the sun, reduces the accuracy and might even obstruct the sensor from making a measurement. To get reliable data, first, we filtered out the failed measurements, i.e., removing all data points with a value greater than 8000, and, second, rejected outliers with Mahalonobis distance and filtered the remaining data points with a Kalman filter (\cref{alg:filter}). For the filter, we assumed constant distance in the process model:
+The sensor uses IR for the measurement. Another strong IR source in the proximity of the sensor, e.g., the sun, reduces the accuracy and might even obstruct the sensor from making a measurement. To get reliable data, first, we filtered out the failed measurements, i.e., removing all data points with a value greater than 8000, and, second, rejected outliers with Mahalonobis distance and filtered the remaining data points with a Kalman filter (\cref{alg:filter}). For the filter we assumed constant distance in the process model:
 \begin{equation}
 \label{eq:filter}
 \begin{split} 
@@ -74,8 +74,8 @@ x_k & = x_{k-1} \\
 y_k & = x_k + v_k \text{ ,}
 \end{split}
 \end{equation}
-where $x_k$ is he distance. The noise process $v_k$ is white, zero-mean, uncorrelated, and has known covariance matrix  $R_k$.\\
-The assumption of constant distance is only valid for the evaluation of the sensor. In case of a moving sensor or target a dynamic process model has to be developed. Further, a IMU should be used for the a priori state estimate. The VL53L0X sensor fused with a IMU has a faster update rate and performs more accurate. \\
+where $x_k$ is the distance. The noise process $v_k$ is white, zero-mean, uncorrelated, and has a known covariance matrix  $R_k$.\\
+The assumption of constant distance is only valid for the evaluation of the sensor. In case of a moving sensor or target a dynamic process model has to be developed. Further, a IMU should be used for the a priori state estimate.\\
 
 \begin{algorithm}
 	\caption{Filter}\label{alg:filter}
@@ -112,7 +112,7 @@ To couple the VL53L0X sensors with the pixhawk we first tried to connect four di
 
 \section{Potential Field}
 \label{sec:potential field}
-The basic idea behind all potential field approaches is that the robot is attracted toward a goal, while being repulsed by a obstacles. For our system, we are only interested in the repulsive potential $U_{rep}$. This potential should be very strong when the system is close to a obstacle and on the same time should not be influenced by obstacle far away. One example of such a repulsive field is:
+The basic idea behind all potential field approaches is that the robot is attracted towards a goal, while being repulsed by a obstacles. For our system, we are only interested in the repulsive potential $U_{rep}$. This potential should be very strong when the system is close to a obstacle and on the same time should not be influenced by obstacle far away. One example of such a repulsive field is:
 \begin{equation}
 \label{eq:pot field}
 \centering
