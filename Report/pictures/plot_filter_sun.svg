@@ -40,7 +40,7 @@
      id="namedview4482"
      showgrid="false"
      inkscape:zoom="1.3008658"
-     inkscape:cx="462"
+     inkscape:cx="274.81697"
      inkscape:cy="307"
      inkscape:window-x="65"
      inkscape:window-y="24"
@@ -648,8 +648,8 @@
          x="-297.5"
          xml:space="preserve"
          y="-7"
-         style="stroke:none;"
-         id="text4280">Measurent Outside, w/o Direct Sunlight</text>
+         style="stroke:none"
+         id="text4280">Measurent Outside, w/ Direct Sunlight</text>
     </g>
     <g
        style="stroke-linecap:butt; fill:rgb(38,38,38); text-rendering:geometricPrecision; image-rendering:optimizeQuality; color-rendering:optimizeQuality; stroke-linejoin:round; stroke:rgb(38,38,38); color-interpolation:linearRGB; stroke-width:0.6667;"
